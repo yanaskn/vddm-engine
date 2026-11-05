@@ -140,7 +140,9 @@
       if (sel && sel !== n.id && (kind === "sg" || kind === "goal" || kind === "lever")) g.classList.add("target");
     };
     const detail = view === "detail";
-    S.levers.forEach(l => draw("lever", l, l.text, detail ? `${l.id}${l.metric ? ", " + l.metric : ""}` : l.id));
+    const net = (typeof VDDMScore !== "undefined") ? VDDMScore.scoreNetwork(S) : null;
+    const top = net ? new Set(VDDMScore.paretoTiers(net.leverScores, 0.2)[0] || []) : new Set();
+    S.levers.forEach(l => draw("lever", l, l.text, net ? `${l.id}, score ${net.scores[l.id].toFixed(2)}, rank ${net.rank[l.id]}${detail && l.metric ? ", " + l.metric : ""}` : (detail ? `${l.id}${l.metric ? ", " + l.metric : ""}` : l.id), top.has(l.id) ? " top" : ""));
     S.sub_goals.forEach(s => {
       const gap = incoming(s.id).length === 0;
       draw("sg", s, s.text, gap ? `${s.id}, no lever` : (detail ? `${s.id}${s.booked_by ? ", booked " + s.booked_by : ""}${s.realized_by ? ", realized " + s.realized_by : ""}` : s.id), gap ? " gap" : "");

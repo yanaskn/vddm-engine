@@ -59,6 +59,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .node.rail rect { fill: var(--rail-bg); stroke: var(--rail); } .node.rail .t { fill: var(--rail-ink); } .node.rail .s { fill: var(--rail); }
 .node.gap rect { stroke: var(--warn); stroke-dasharray: 5 3; }
 .node.gap .s { fill: var(--warn); }
+.node.top rect { stroke-width: 2.4; }
 .node.selected rect { stroke-width: 2.5; }
 .node.target rect { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 4 3; }
 .link { fill: none; stroke: var(--fg); stroke-linecap: round; }

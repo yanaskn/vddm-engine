@@ -1,0 +1,6 @@
+{
+  "name": "vddm-engine",
+  "private": true,
+  "scripts": { "test": "node --test tests/score.test.js" },
+  "devDependencies": { "js-yaml": "4.1.0" }
+}
