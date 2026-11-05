@@ -10,6 +10,9 @@
 main { max-width: 720px; margin: 0 auto; padding-block: 24px 48px; }
 main h1 { font-size: 34px; margin-bottom: 6px; }
 .lede { font-size: 17px; color: var(--muted); max-width: 60ch; margin: 0 0 28px; }
+.actions { margin: 0 0 28px; }
+.actions .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+h2.section { font-family: var(--font-display); font-size: 20px; font-weight: 600; margin: 0 0 10px; }
 .cards { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
 @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
 .card { display: block; text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
@@ -27,19 +30,20 @@ main h1 { font-size: 34px; margin-bottom: 6px; }
   <h1>VDDM Engine</h1>
   <p class="lede">A self-service decision system built on the Value-Driven Decision Model. A guided conversation draws out what matters, a live map turns it into a goal, sub-goals and levers, and the model scores the result. Work in progress.</p>
 
+  <div class="actions">
+    <button class="btn primary" disabled title="Coming with the guided session">Start a new project</button>
+  </div>
+
+  <h2 class="section">Projects</h2>
   <div class="cards">
-    <a class="card" href="map/">
-      <h2>Decision map</h2>
-      <p>The interactive network. Edit nodes, draw and rate links, park options, export the state.</p>
-    </a>
-    <a class="card" href="cases/off-season/">
-      <h2>Case: off-season revenue</h2>
-      <p>The first decision run through the method, a multi-location hospitality operator, read-only.</p>
+    <a class="card" href="projects/off-season/">
+      <h2>Off-season revenue</h2>
+      <p>Sustain revenue through the off-season, Q1 2027. A multi-location hospitality operator. Goal, three sub-goals, seven levers, four guardrails.</p>
     </a>
   </div>
 
   <ul class="steps">
-    <li><b>Done</b><span>Guide prompt v1 and v2, state schema v2, decision map prototype, first case.</span></li>
+    <li><b>Done</b><span>Guide prompt v1 and v2, state schema v2, decision map prototype, first project.</span></li>
     <li><b class="now">Now</b><span>Cycle 2: the decision-maker runs the map on a live decision and logs what fights back.</span></li>
     <li><b>Next</b><span>Scoring core, guided session with the map beside the conversation, options phase.</span></li>
   </ul>

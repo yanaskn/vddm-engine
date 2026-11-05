@@ -258,7 +258,7 @@
   $("addLever").addEventListener("click", (ev) => { const n = { id: nextId("L", S.levers), text: "New lever", metric: "", target: "", by: S.decision.horizon, from: [], contributes_to: [] }; S.levers.push(n); commit(); openNodePop("lever", n, ev); });
   $("addSG").addEventListener("click", (ev) => { const n = { id: nextId("SG", S.sub_goals), text: "New sub-goal", share: 0, metric: "", realized_by: S.decision.horizon, from: [] }; S.sub_goals.push(n); commit(); openNodePop("sg", n, ev); });
   $("addRail").addEventListener("click", (ev) => { const n = { id: nextId("R", S.guardrails), text: "New guardrail", metric: "", bound: "", weight: "important", from: [] }; S.guardrails.push(n); commit(); openNodePop("rail", n, ev); });
-  $("reset").addEventListener("click", () => { const b = $("reset"); if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "Confirm reset"; setTimeout(() => { b.dataset.armed = ""; b.textContent = "Reset to fixture"; }, 3000); return; } S = JSON.parse(JSON.stringify(FIXTURE)); b.dataset.armed = ""; b.textContent = "Reset to fixture"; sel = null; closePop(); commit(); });
+  $("reset").addEventListener("click", () => { const b = $("reset"); if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "Confirm reset"; setTimeout(() => { b.dataset.armed = ""; b.textContent = "Reset to original"; }, 3000); return; } S = JSON.parse(JSON.stringify(FIXTURE)); b.dataset.armed = ""; b.textContent = "Reset to original"; sel = null; closePop(); commit(); });
 
   // ----- parked options
   function renderLot() {
@@ -298,7 +298,7 @@
 
   let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { if (S) { closePop(); render(); } }, 120); });
   if (RO) document.body.classList.add("ro");
-  fetch(CFG.fixture || "../fixtures/off-season.yaml").then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+  fetch(CFG.fixture).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
     .then(txt => { FIXTURE = jsyaml.load(txt); S = load(); render(); })
     .catch(e => { status.textContent = "Could not load the decision: " + e.message; });
 })();

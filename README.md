@@ -7,8 +7,7 @@ Static site, no build step. Deployed on Vercel from `main`.
 ## Layout
 
 - `index.html` landing page
-- `map/` the decision map module, editable, state kept in the browser
-- `cases/off-season/` the first case, read-only, loads the fixture
+- `projects/<name>/` one page per project, each an editable decision map with its own browser-side state; "Start a new project" on the landing page is disabled until the guided session exists
 - `assets/map.css`, `assets/map.js` the map module shared by both pages; configured through `window.VDDM_CONFIG` (`fixture`, `readonly`, `storageKey`)
 - `fixtures/*.yaml` state documents in schema v2
 - `prompts/` the guide prompts, one file per version; the schema is at the end of the current one
