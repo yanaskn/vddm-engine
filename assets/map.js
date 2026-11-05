@@ -48,7 +48,10 @@
 
   // ----- layout
   function layout() {
-    const W = 900, LX = 30, LW = 200, SX = 360, SW = 200, GX = 690, GW = 180, NH = 58, PITCH = 70, TOP = 46;
+    const W = Math.max(760, Math.floor(wrap.clientWidth) - 2);
+    const LW = Math.max(220, Math.min(320, Math.floor((W - 160) / 3))), SW = LW, GW = Math.min(260, LW);
+    const LX = 30, GX = W - 30 - GW, SX = Math.round((LX + LW + GX) / 2 - SW / 2);
+    const NH = 58, PITCH = 70, TOP = 46;
     const pos = {};
     // levers in order, children directly under their parent, indented
     const roots = S.levers.filter(l => !l.parent || !S.levers.some(p => p.id === l.parent));
@@ -64,11 +67,11 @@
     let bottom = Math.max(leverBottom, colMid + sgSpan / 2 + NH / 2);
     // guardrail band
     const bandY = bottom + 56;
-    const RW = 196, RH = 50, gap = 14, perRow = Math.max(1, Math.floor((W - 60 + gap) / (RW + gap)));
+    const RW = Math.max(196, Math.floor((W - 60 - 28 - 3 * 14) / 4)), RH = 50, gap = 14, perRow = Math.max(1, Math.floor((W - 60 + gap) / (RW + gap)));
     S.guardrails.forEach((r, i) => { const row = Math.floor(i / perRow), col = i % perRow; pos[r.id] = { x: 30 + 14 + col * (RW + gap), y: bandY + 30 + row * (RH + 12), w: RW, h: RH }; });
     const rows = Math.max(1, Math.ceil(S.guardrails.length / perRow));
     const bandH = 30 + rows * (RH + 12) + 4;
-    return { pos, W, H: bandY + bandH + 20, bandY, bandH, colMid };
+    return { pos, W, H: bandY + bandH + 20, bandY, bandH, colMid, LW, SX, SW, GX, GW };
   }
 
   // ----- render
@@ -77,14 +80,14 @@
 
   function render() {
     const L = layout();
-    svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`);
+    svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`); svg.setAttribute("width", L.W); svg.setAttribute("height", L.H);
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     $("dtitle").textContent = S.decision.title || "";
     // column labels
-    text(130, 22, "label", "Levers", svg);
+    text(L.pos[S.levers[0] ? S.levers[0].id : S.goal.id] ? 30 + L.LW / 2 : 130, 22, "label", "Levers", svg);
     const sum = S.sub_goals.reduce((a, s) => a + (Number(s.share) || 0), 0);
-    text(460, 22, "label" + (sum === 100 ? "" : " bad"), `Sub-goals, shares ${sum}%`, svg);
-    text(780, 22, "label", "Goal", svg);
+    text(L.SX + L.SW / 2, 22, "label" + (sum === 100 ? "" : " bad"), `Sub-goals, shares ${sum}%`, svg);
+    text(L.GX + L.GW / 2, 22, "label", "Goal", svg);
     // guardrail band
     el("rect", { x: 30, y: L.bandY, width: L.W - 60, height: L.bandH, rx: 12, class: "band" }, svg);
     text(44, L.bandY + 16, "label", "Guardrails", svg, "start");
@@ -127,10 +130,10 @@
       const g = el("g", { class: `node ${kind}${extra || ""}${sel === n.id ? " selected" : ""}${focusId && isOn(n.id) ? " on" : ""}`, "data-id": n.id }, nodesG);
       el("rect", { x: p.x, y: p.y, width: p.w, height: p.h, rx: 8 }, g);
       const two = subtitle != null;
-      const lines = wrapText(title, Math.floor((p.w - 16) / 5.9), 2);
-      const top = p.y + (two ? 15 : (lines.length > 1 ? p.h / 2 - 7 : p.h / 2));
-      lines.forEach((ln, i) => text(p.x + p.w / 2, top + i * 13, "t", ln, g));
-      if (two) text(p.x + p.w / 2, p.y + p.h - 12, "s", short(subtitle, Math.floor((p.w - 12) / 4.9)), g);
+      const lines = wrapText(title, Math.floor((p.w - 16) / 6.9), 2);
+      const top = p.y + (two ? 15 : (lines.length > 1 ? p.h / 2 - 8 : p.h / 2));
+      lines.forEach((ln, i) => text(p.x + p.w / 2, top + i * 15, "t", ln, g));
+      if (two) text(p.x + p.w / 2, p.y + p.h - 12, "s", short(subtitle, Math.floor((p.w - 12) / 5.7)), g);
       g.addEventListener("click", (ev) => { ev.stopPropagation(); onNodeClick(kind, n, ev); });
       g.addEventListener("mouseenter", () => { focusId = n.id; svg.classList.add("focus"); refocus(); });
       g.addEventListener("mouseleave", () => { focusId = null; svg.classList.remove("focus"); refocus(); });
@@ -293,6 +296,7 @@
     } catch (e) { err.textContent = "Could not load: " + e.message; }
   });
 
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { if (S) { closePop(); render(); } }, 120); });
   if (RO) document.body.classList.add("ro");
   fetch(CFG.fixture || "../fixtures/off-season.yaml").then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
     .then(txt => { FIXTURE = jsyaml.load(txt); S = load(); render(); })
