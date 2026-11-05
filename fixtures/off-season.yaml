@@ -243,6 +243,8 @@ levers:
         priority: must
       - to: SG3
         priority: must
+      - to: L6
+        priority: must
   - id: L2
     text: Increase repeat and referral bookings from past clients and guests
     metric: share of bookings from repeat or referral; average rating
@@ -284,6 +286,8 @@ levers:
     contributes_to:
       - to: SG1
         priority: must
+      - to: L6
+        priority: important
   - id: L5
     text: Offer Q1 pricing packages within the discount cap
     metric: bookings on Q1 packages
@@ -299,6 +303,10 @@ levers:
         priority: must
       - to: SG3
         priority: must
+      - to: L6
+        priority: important
+      - to: L1
+        priority: nice
   - id: L6
     text: Increase sales team output on Q1'27 bookings
     metric: Q1 bookings closed per sales manager
@@ -339,6 +347,8 @@ levers:
         priority: nice
       - to: SG3
         priority: nice
+      - to: L7
+        priority: important
 guardrails:
   - id: R1
     text: Keep monthly operating cash flow positive and total debt under a ceiling
