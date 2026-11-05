@@ -1,0 +1,394 @@
+# Fixture: off-season revenue decision, schema v2. Cycle 1 output, migrated.
+decision:
+  title: Sustain revenue through the off-season (Q1'27)
+  focus: off-season revenue, Jan to Mar 2027
+  direction: more
+  horizon: Mar 31, 2027
+  out_of_scope:
+    - on-season performance
+    - cost-cutting for its own sake
+stakeholders:
+  dmer:
+    name: Yana (as owner and CEO, for this exercise)
+    role: owner / CEO
+  other_decision_makers: []
+  advisors:
+    - name_or_group: sales managers
+      consulted_on: advice and clarifications
+  affected:
+    - group: customers
+      impact: direct
+      has_say: "no"
+    - group: employees
+      impact: direct
+      has_say: "no"
+    - group: vendors
+      impact: indirect
+      has_say: "no"
+    - group: family
+      impact: supporting
+      has_say: "no"
+  no_voice: []
+in_place:
+  - online ordering on own site
+  - fixed to-go pricing
+  - non-wedding event types (events already diversified; weddings 40 to 60%)
+  - price floors per service line
+  - flat-rate staff scheduled first
+  - smaller-format offerings
+  - vendor terms for off-season volume
+  - margin tracked per event or order
+what_matters:
+  - id: W1
+    statement: "demand for any of our services: weddings, other events, to-go, catering"
+    whose: dmer
+    direction: more
+    weight: important
+  - id: W2
+    statement: fewer corporate events after the holidays
+    whose: dmer
+    direction: more
+    weight: important
+  - id: W3
+    statement: we want more sales
+    whose: dmer
+    direction: more
+    weight: must
+  - id: W4
+    statement: cash flow in the off-season
+    whose: dmer
+    direction: more
+    weight: must
+  - id: W5
+    statement: keeping staff busy
+    whose: dmer
+    direction: more
+    weight: nice
+    why:
+      - less chance of leaving
+      - consistent work keeps up quality
+      - happy employees promote the brand
+  - id: W6
+    statement: vendor relationships
+    whose: affected:vendors
+    direction: keep
+    weight: nice
+  - id: W7
+    statement: the venue sitting empty
+    whose: dmer
+    direction: less
+    weight: nice
+  - id: W8
+    statement: lack of mounting debt
+    whose: dmer
+    direction: less
+    weight: must
+  - id: W9
+    statement: happy staff
+    whose: affected:employees
+    direction: more
+    weight: important
+  - id: W10
+    statement: engaged customer base
+    whose: affected:customers
+    direction: more
+    weight: important
+    why:
+      - more events means more guests exposed to venues, food, service
+      - guests bring sales, brand recognition, return customers, ratings
+  - id: W11
+    statement: brand recognition
+    whose: dmer
+    direction: more
+    weight: nice
+    why:
+      - more business more consistently
+      - shorter sales journey
+      - more vendors want to work with us
+      - catering clients outside venues
+      - faster to-go purchases
+      - employer of choice
+  - id: W12
+    statement: shorter sales journey (less need to persuade)
+    whose: dmer
+    direction: less
+    weight: nice
+  - id: W13
+    statement: more vendors that want to work with us
+    whose: affected:vendors
+    direction: more
+    weight: nice
+  - id: W14
+    statement: catering clients outside of our venues
+    whose: dmer
+    direction: more
+    weight: important
+  - id: W15
+    statement: quicker purchases of our to-go
+    whose: affected:customers
+    direction: more
+    weight: must
+  - id: W16
+    statement: employer of choice for high-quality employees
+    whose: affected:employees
+    direction: more
+    weight: nice
+  - id: W17
+    statement: return customers
+    whose: affected:customers
+    direction: more
+    weight: important
+  - id: W18
+    statement: ratings and reviews
+    whose: affected:customers
+    direction: more
+    weight: important
+  - id: W19
+    statement: not discounting so deep it damages on-season pricing
+    whose: dmer
+    direction: keep
+    weight: important
+  - id: W20
+    statement: not over-committing staff or cash to off-season bets that don't pay back
+    whose: dmer
+    direction: less
+    weight: important
+  - id: W21
+    statement: off-season as a testing ground for new offerings
+    whose: dmer
+    direction: more
+    weight: nice
+  - id: W22
+    statement: a repeatable off-season playbook
+    whose: dmer
+    direction: more
+    weight: important
+  - id: W23
+    statement: growing lines that are not seasonal
+    whose: dmer
+    direction: more
+    weight: nice
+  - id: W24
+    statement: get leads in Q4 (generally should be much earlier)
+    whose: dmer
+    direction: more
+    weight: must
+    by: Dec 31, 2026
+  - id: W25
+    statement: revenue increase cannot come with even higher costs; profitability may run below on-season for now
+    whose: dmer
+    direction: keep
+    weight: must
+  - id: W26
+    statement: leverage flat-rate employees first before engaging hourly
+    whose: dmer
+    direction: more
+    weight: important
+goal:
+  id: G
+  text: Increase overall Q1'27 revenue to [X%] of average on-season quarterly revenue
+  metric: Q1'27 revenue vs. on-season quarterly average
+  target: "[X%]"
+  realized_by: Mar 31, 2027
+  from:
+    - W1
+    - W2
+    - W3
+    - W7
+    - W14
+    - W15
+sub_goals:
+  - id: SG1
+    text: Q1'27 event revenue (weddings, corporate, venue rentals)
+    share: 75
+    metric: booked and realized event revenue
+    booked_by: Dec 31, 2026
+    realized_by: Mar 31, 2027
+    from:
+      - W1
+      - W2
+      - W24
+  - id: SG2
+    text: Q1'27 catering revenue outside the venues
+    share: 15
+    metric: booked and realized catering revenue
+    booked_by: Dec 31, 2026
+    realized_by: Mar 31, 2027
+    from:
+      - W14
+      - W24
+  - id: SG3
+    text: Q1'27 to-go revenue
+    share: 10
+    metric: booked and realized to-go revenue
+    booked_by: Dec 31, 2026
+    realized_by: Mar 31, 2027
+    from:
+      - W15
+      - W24
+levers:
+  - id: L1
+    text: Increase marketing-sourced leads and orders in every line
+    metric: leads and orders attributed to marketing, per line
+    target: "[n]"
+    by: Mar 31, 2027
+    from:
+      - W1
+      - W11
+      - W12
+    contributes_to:
+      - to: SG1
+        priority: must
+      - to: SG2
+        priority: must
+      - to: SG3
+        priority: must
+  - id: L2
+    text: Increase repeat and referral bookings from past clients and guests
+    metric: share of bookings from repeat or referral; average rating
+    target: "[W%]; [4.x+]"
+    by: Mar 31, 2027
+    from:
+      - W10
+      - W17
+      - W18
+    contributes_to:
+      - to: SG1
+        priority: important
+      - to: SG2
+        priority: important
+      - to: SG3
+        priority: must
+  - id: L3
+    text: Increase corporate business in Q1'27
+    metric: corporate bookings and orders
+    target: "[$ or n]"
+    by: Mar 31, 2027
+    from:
+      - W2
+    contributes_to:
+      - to: SG1
+        priority: must
+      - to: SG2
+        priority: important
+      - to: SG3
+        priority: must
+  - id: L4
+    text: Increase vendor and planner referrals
+    metric: referral-sourced leads per month
+    target: "[K]"
+    by: Mar 31, 2027
+    from:
+      - W6
+      - W13
+    contributes_to:
+      - to: SG1
+        priority: must
+  - id: L5
+    text: Offer Q1 pricing packages within the discount cap
+    metric: bookings on Q1 packages
+    target: "[n]"
+    by: Mar 31, 2027
+    from:
+      - W1
+      - W19
+    contributes_to:
+      - to: SG1
+        priority: must
+      - to: SG2
+        priority: must
+      - to: SG3
+        priority: must
+  - id: L6
+    text: Increase sales team output on Q1'27 bookings
+    metric: Q1 bookings closed per sales manager
+    target: "[n]"
+    by: Mar 31, 2027
+    from:
+      - W24
+    contributes_to:
+      - to: SG1
+        priority: must
+      - to: SG2
+        priority: must
+      - to: SG3
+        priority: must
+  - id: L7
+    text: Grow non-seasonal lines (to-go, catering)
+    metric: share of Q1'27 revenue from non-seasonal lines
+    target: "[P%]"
+    by: Mar 31, 2027
+    from:
+      - W21
+      - W22
+      - W23
+    contributes_to:
+      - to: SG1
+        priority: nice
+      - to: SG2
+        priority: important
+      - to: SG3
+        priority: must
+guardrails:
+  - id: R1
+    text: Keep monthly operating cash flow positive and total debt under a ceiling
+    metric: monthly cash flow; total debt
+    bound: cash flow > 0; debt < [threshold]
+    weight: must
+    from:
+      - W4
+      - W8
+  - id: R2
+    text: Keep gross margin positive on every Q1'27 booking or order
+    metric: margin per event or order
+    bound: floor [Y%]
+    weight: must
+    from:
+      - W25
+  - id: R3
+    text: Keep the current team through Q1'27 and schedule flat-rate staff before hourly
+    metric: headcount; flat-rate hours before hourly
+    bound: no off-season layoffs; flat-rate to [H hrs/wk] first
+    weight: important
+    from:
+      - W5
+      - W9
+      - W16
+      - W26
+  - id: R4
+    text: Hold on-season pricing and cap spend per Q1 initiative until payback
+    metric: discount depth; spend per initiative
+    bound: discount at most [D%]; spend at most [budget] until payback
+    weight: important
+    from:
+      - W19
+      - W20
+options_parked:
+  - text: Q4 paid and social campaigns
+    serves: L1
+  - text: catering and to-go promotions
+    serves: L1
+  - text: ezCater-type channels
+    serves: L1
+  - text: to-go offers to past guests
+    serves: L1
+  - text: outreach to past clients and guests
+    serves: L2
+  - text: Q1 kickoffs and off-sites
+    serves: L3
+  - text: corporate lunch programs
+    serves: L3
+  - text: planner and vendor partnerships
+    serves: L4
+  - text: Q1 packages and pricing
+    serves: L5
+  - text: sales incentives tied to Q1 bookings
+    serves: L6
+  - text: pickup and delivery windows
+    serves: L7
+  - text: to-go as entry product to catering and events
+    serves: L7
+gaps: []
+notes:
+  - Weddings are 40 to 60% of events; the rest is diversified, so single-driver risk was dropped
+  - "Rating sheets in Drive: VDDM Off-Season Revenue - Value Ratings, - Lever Priorities"
