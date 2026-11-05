@@ -49,32 +49,55 @@
   // ----- layout
   function layout() {
     const W = Math.max(760, Math.floor(wrap.clientWidth) - 2);
-    const LW = Math.max(220, Math.min(320, Math.floor((W - 160) / 3))), SW = LW, GW = Math.min(260, LW);
-    const LX = 30, GX = W - 30 - GW, SX = Math.round((LX + LW + GX) / 2 - SW / 2);
     const NH = 58, PITCH = 70, TOP = 46;
     const pos = {};
-    // levers in order, children directly under their parent, indented
-    const roots = S.levers.filter(l => !l.parent || !S.levers.some(p => p.id === l.parent));
+    const leverIds = new Set(S.levers.map(l => l.id));
+    // depth: 0 for levers that only feed sub-goals or the goal; 1 + max depth of any lever they feed
+    const depth = {};
+    const depthOf = (id, seen) => {
+      if (depth[id] != null) return depth[id];
+      seen = seen || new Set(); if (seen.has(id)) return 0; seen.add(id);
+      const l = S.levers.find(x => x.id === id); if (!l) return 0;
+      let d = 0;
+      (l.contributes_to || []).forEach(c => { if (leverIds.has(c.to)) d = Math.max(d, 1 + depthOf(c.to, seen)); });
+      depth[id] = d; return d;
+    };
+    S.levers.forEach(l => depthOf(l.id));
+    const maxDepth = S.levers.reduce((m, l) => Math.max(m, depth[l.id]), 0);
+    const cols = maxDepth + 1 + 2;                         // lever columns + sub-goals + goal
+    const GAP = Math.max(48, Math.min(90, Math.floor((W - 60) / (cols * 4))));
+    const CW = Math.max(170, Math.min(300, Math.floor((W - 60 - GAP * (cols - 1)) / cols)));
+    const colX = (i) => 30 + i * (CW + GAP);              // column i from the left
+    // levers: column by depth, deepest on the left; children sit under their parent in the parent's column
+    const byCol = {};
     const ordered = [];
-    roots.forEach(r => { ordered.push({ l: r, depth: 0 }); S.levers.filter(c => c.parent === r.id).forEach(c => ordered.push({ l: c, depth: 1 })); });
-    ordered.forEach((o, i) => { pos[o.l.id] = { x: LX + o.depth * 18, y: TOP + i * PITCH, w: LW - o.depth * 18, h: NH }; });
-    const leverBottom = TOP + Math.max(ordered.length, 1) * PITCH - (PITCH - NH);
+    const roots = S.levers.filter(l => !l.parent || !S.levers.some(p => p.id === l.parent));
+    roots.forEach(r => { ordered.push({ l: r, d: 0 }); S.levers.filter(c => c.parent === r.id).forEach(c => ordered.push({ l: c, d: 1 })); });
+    ordered.forEach(o => { const col = maxDepth - depth[o.l.id]; (byCol[col] = byCol[col] || []).push(o); });
+    let tallest = 0;
+    Object.keys(byCol).forEach(k => { tallest = Math.max(tallest, byCol[k].length); });
+    const leverBottom = TOP + Math.max(tallest, 1) * PITCH - (PITCH - NH);
     const colMid = (TOP + leverBottom) / 2;
+    Object.keys(byCol).forEach(k => {
+      const list = byCol[k], span = list.length * PITCH - (PITCH - NH);
+      const y0 = colMid - span / 2;
+      list.forEach((o, i) => { pos[o.l.id] = { x: colX(Number(k)) + o.d * 18, y: y0 + i * PITCH, w: CW - o.d * 18, h: NH }; });
+    });
+    const SX = colX(maxDepth + 1), GX = colX(maxDepth + 2), SW = CW, GW = CW;
     const n = S.sub_goals.length;
     const sgSpan = Math.max((n - 1) * 100, 0);
     S.sub_goals.forEach((s, i) => { pos[s.id] = { x: SX, y: colMid - sgSpan / 2 - NH / 2 + i * 100, w: SW, h: NH }; });
     pos[S.goal.id] = { x: GX, y: colMid - 31, w: GW, h: 62 };
     let bottom = Math.max(leverBottom, colMid + sgSpan / 2 + NH / 2);
-    // guardrail band
     const bandY = bottom + 56;
-    const RW = Math.max(196, Math.floor((W - 60 - 28 - 3 * 14) / 4)), RH = 50, gap = 14, perRow = Math.max(1, Math.floor((W - 60 + gap) / (RW + gap)));
+    const RW = Math.max(196, Math.floor((W - 60 - 28 - 3 * 14) / 4)), RH = 62, gap = 14, perRow = Math.max(1, Math.floor((W - 60 + gap) / (RW + gap)));
     S.guardrails.forEach((r, i) => { const row = Math.floor(i / perRow), col = i % perRow; pos[r.id] = { x: 30 + 14 + col * (RW + gap), y: bandY + 30 + row * (RH + 12), w: RW, h: RH }; });
     const rows = Math.max(1, Math.ceil(S.guardrails.length / perRow));
     const bandH = 30 + rows * (RH + 12) + 4;
-    return { pos, W, H: bandY + bandH + 20, bandY, bandH, colMid, LW, SX, SW, GX, GW };
+    const leverLeft = colX(0), leverRight = colX(maxDepth) + CW;
+    return { pos, W, H: bandY + bandH + 20, bandY, bandH, colMid, LW: leverRight - leverLeft, leverLeft, SX, SW, GX, GW, maxDepth };
   }
 
-  // ----- render
   function el(name, attrs, parent) { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
   function text(x, y, cls, str, parent, anchor) { const t = el("text", { x, y, class: cls, "text-anchor": anchor || "middle", "dominant-baseline": "central" }, parent); t.textContent = str; return t; }
 
@@ -84,7 +107,7 @@
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     $("dtitle").textContent = S.decision.title || "";
     // column labels
-    text(L.pos[S.levers[0] ? S.levers[0].id : S.goal.id] ? 30 + L.LW / 2 : 130, 22, "label", "Levers", svg);
+    text(L.leverLeft + L.LW / 2, 22, "label", L.maxDepth > 0 ? "Levers, feeding levers on the left" : "Levers", svg);
     const sum = S.sub_goals.reduce((a, s) => a + (Number(s.share) || 0), 0);
     text(L.SX + L.SW / 2, 22, "label" + (sum === 100 ? "" : " bad"), `Sub-goals, shares ${sum}%`, svg);
     text(L.GX + L.GW / 2, 22, "label", "Goal", svg);
@@ -98,7 +121,7 @@
       if (view === "overview" && c.priority !== "must") return;
       const x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x - 2, y2 = b.y + b.h / 2;
       let d;
-      if (b.x <= a.x + a.w) { // target is in the lever column (another lever): hook around the left
+      if (b.x <= a.x + a.w) { // target sits at or left of the source (a cycle): hook around the left
         const xl = Math.min(a.x, b.x) - 14;
         d = `M${a.x} ${y1} C ${xl} ${y1}, ${xl} ${y2}, ${b.x} ${y2}`;
       } else {
