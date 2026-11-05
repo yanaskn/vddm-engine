@@ -31,12 +31,24 @@
     return null;
   }
   function nextId(prefix, list) { let i = 1; while (list.some(x => x.id === prefix + i)) i++; return prefix + i; }
+  function wrapText(t, max, maxLines) {
+    const words = String(t || "").trim().split(/\s+/).filter(Boolean); const out = []; let cur = "";
+    for (let i = 0; i < words.length; i++) {
+      const w = words[i];
+      if (!cur) { cur = w; continue; }
+      if ((cur + " " + w).length <= max) { cur += " " + w; continue; }
+      if (out.length === maxLines - 1) { cur += " " + words.slice(i).join(" "); break; }
+      out.push(cur); cur = w;
+    }
+    if (cur) out.push(cur);
+    return out.map(ln => short(ln, max));
+  }
   function short(t, max) { t = String(t || ""); return t.length > max ? t.slice(0, max - 1).trimEnd() + "…" : t; }
   function incoming(id) { return S.levers.flatMap(l => (l.contributes_to || []).filter(c => c.to === id).map(c => ({ from: l.id, pri: c.priority }))); }
 
   // ----- layout
   function layout() {
-    const W = 900, LX = 30, LW = 200, SX = 360, SW = 200, GX = 690, GW = 180, NH = 54, PITCH = 68, TOP = 46;
+    const W = 900, LX = 30, LW = 200, SX = 360, SW = 200, GX = 690, GW = 180, NH = 58, PITCH = 70, TOP = 46;
     const pos = {};
     // levers in order, children directly under their parent, indented
     const roots = S.levers.filter(l => !l.parent || !S.levers.some(p => p.id === l.parent));
@@ -52,7 +64,7 @@
     let bottom = Math.max(leverBottom, colMid + sgSpan / 2 + NH / 2);
     // guardrail band
     const bandY = bottom + 56;
-    const RW = 196, RH = 48, gap = 14, perRow = Math.max(1, Math.floor((W - 60 + gap) / (RW + gap)));
+    const RW = 196, RH = 50, gap = 14, perRow = Math.max(1, Math.floor((W - 60 + gap) / (RW + gap)));
     S.guardrails.forEach((r, i) => { const row = Math.floor(i / perRow), col = i % perRow; pos[r.id] = { x: 30 + 14 + col * (RW + gap), y: bandY + 30 + row * (RH + 12), w: RW, h: RH }; });
     const rows = Math.max(1, Math.ceil(S.guardrails.length / perRow));
     const bandH = 30 + rows * (RH + 12) + 4;
@@ -115,8 +127,10 @@
       const g = el("g", { class: `node ${kind}${extra || ""}${sel === n.id ? " selected" : ""}${focusId && isOn(n.id) ? " on" : ""}`, "data-id": n.id }, nodesG);
       el("rect", { x: p.x, y: p.y, width: p.w, height: p.h, rx: 8 }, g);
       const two = subtitle != null;
-      text(p.x + p.w / 2, p.y + (two ? 19 : p.h / 2), "t", short(title, Math.floor(p.w / 7.6)), g);
-      if (two) text(p.x + p.w / 2, p.y + 38, "s", short(subtitle, Math.floor(p.w / 6.4)), g);
+      const lines = wrapText(title, Math.floor((p.w - 16) / 5.9), 2);
+      const top = p.y + (two ? 15 : (lines.length > 1 ? p.h / 2 - 7 : p.h / 2));
+      lines.forEach((ln, i) => text(p.x + p.w / 2, top + i * 13, "t", ln, g));
+      if (two) text(p.x + p.w / 2, p.y + p.h - 12, "s", short(subtitle, Math.floor((p.w - 12) / 4.9)), g);
       g.addEventListener("click", (ev) => { ev.stopPropagation(); onNodeClick(kind, n, ev); });
       g.addEventListener("mouseenter", () => { focusId = n.id; svg.classList.add("focus"); refocus(); });
       g.addEventListener("mouseleave", () => { focusId = null; svg.classList.remove("focus"); refocus(); });

@@ -52,8 +52,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .mapwrap svg { display: block; width: 100%; min-width: 760px; height: auto; font-family: var(--font-ui); }
 .node rect { stroke-width: 1; cursor: pointer; }
 .node text { pointer-events: none; }
-.node .t { font-size: 14px; font-weight: 500; }
-.node .s { font-size: 12px; }
+.node .t { font-size: 11px; font-weight: 500; }
+.node .s { font-size: 9.5px; }
 .node.lever rect { fill: var(--lever-bg); stroke: var(--lever); } .node.lever .t { fill: var(--lever-ink); } .node.lever .s { fill: var(--lever); }
 .node.sg rect, .node.goal rect { fill: var(--goal-bg); stroke: var(--goal); } .node.sg .t, .node.goal .t { fill: var(--goal-ink); } .node.sg .s, .node.goal .s { fill: var(--goal); }
 .node.rail rect { fill: var(--rail-bg); stroke: var(--rail); } .node.rail .t { fill: var(--rail-ink); } .node.rail .s { fill: var(--rail); }
@@ -68,7 +68,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .hit { fill: none; stroke: transparent; stroke-width: 14; cursor: pointer; }
 .link.share { stroke: var(--goal); }
 .sharebg { fill: var(--surface); stroke: var(--goal); stroke-width: 0.8; }
-.sharelbl { font-size: 12px; font-weight: 600; fill: var(--goal-ink); pointer-events: none; }
+.sharelbl { font-size: 11px; font-weight: 600; fill: var(--goal-ink); pointer-events: none; }
 svg.focus .sharebg, svg.focus .sharelbl { opacity: 0.25; }
 .link.sel { stroke: var(--accent); }
 svg.focus .link:not(.on) { opacity: 0.12; }
