@@ -1,4 +1,4 @@
-# Fixture: off-season revenue decision, schema v2. Cycle 1 output, migrated.
+# Fixture: off-season revenue decision, schema v2. Cycle 1 output, migrated; cycle 2 edits applied.
 decision:
   title: Sustain revenue through the off-season (Q1'27)
   focus: off-season revenue, Jan to Mar 2027
@@ -319,8 +319,6 @@ levers:
     target: "[P%]"
     by: Mar 31, 2027
     from:
-      - W21
-      - W22
       - W23
     contributes_to:
       - to: SG1
@@ -329,6 +327,18 @@ levers:
         priority: important
       - to: SG3
         priority: must
+  - id: L8
+    text: Test new offerings in the off-season
+    metric: offerings tested, each with a go or no-go decision
+    target: "[n]"
+    by: Mar 31, 2027
+    from:
+      - W21
+    contributes_to:
+      - to: SG2
+        priority: nice
+      - to: SG3
+        priority: nice
 guardrails:
   - id: R1
     text: Keep monthly operating cash flow positive and total debt under a ceiling
@@ -391,4 +401,9 @@ options_parked:
 gaps: []
 notes:
   - Weddings are 40 to 60% of events; the rest is diversified, so single-driver risk was dropped
+  - W22, a repeatable off-season playbook, describes the exercise itself and is not attached to a lever
+  - >-
+    Lever lineage from the cycle 1 rating sheet: O8 repeat and referral became L2; O9 vendor and planner referrals
+    became L4; O7 non-seasonal lines became L7; O4 book Q1 revenue by Dec 31 became the booked_by dates on the
+    sub-goals; sheet items L1 to L15 are options, parked by lever; L16 to L20 are in place and support R2
   - "Rating sheets in Drive: VDDM Off-Season Revenue - Value Ratings, - Lever Priorities"
