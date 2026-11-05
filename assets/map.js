@@ -160,7 +160,7 @@
   }
   function renderStatus() {
     if (sel) { const n = nodeById(sel); status.textContent = `Linking ${sel}: click a sub-goal, the goal, or another lever it contributes to. Esc to cancel.`; status.classList.add("active"); }
-    else { const gaps = S.sub_goals.filter(s => incoming(s.id).length === 0).map(s => s.id); status.textContent = gaps.length ? `Gap check: ${gaps.join(", ")} has no lever pointing at it.` : "Every sub-goal has at least one lever."; status.classList.remove("active"); }
+    else { const gaps = S.sub_goals.filter(s => incoming(s.id).length === 0).map(s => s.id); status.textContent = gaps.length ? `Gap check: ${gaps.join(", ")} has no lever pointing at it.` : ""; status.classList.remove("active"); }
   }
 
   // ----- interactions
