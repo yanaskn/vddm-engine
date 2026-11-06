@@ -26,11 +26,10 @@ test("Step 5 on the off-season fixture: chained lever scores", () => {
   assert.equal(net.converged, true);
   near(net.scores.SG1, 0.75); near(net.scores.SG2, 0.15); near(net.scores.SG3, 0.10);
   near(net.scores.L6, 0.95);                       // must to all three sub-goals
-  near(net.scores.L7, 0.41);                       // nice 0.75 + important 0.15 + must 0.10
-  near(net.scores.L1, 0.95 + 0.95 * 0.95);         // own links plus must into L6
-  near(net.scores.L5, 0.95 + 0.6 * 0.95 + 0.3 * net.scores.L1);
-  assert.equal(net.leverScores[0].id, "L5");
-  assert.equal(net.rank.L8, 8);
+    near(net.scores.L1, 0.95 + 0.95 * 0.95);         // own links plus must into L6
+  near(net.scores.L5, 0.95 * 0.75 + 0.6 * 0.15 + 0.6 * 0.95);  // conversion lever: SG1 must, SG2 important, L6 important
+  assert.equal(net.leverScores[0].id, "L1");
+  assert.equal(net.rank.L8, 7);
 });
 
 test("Step 6 Pareto tiers keep ties together", () => {

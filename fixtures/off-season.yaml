@@ -38,6 +38,7 @@ in_place:
   - smaller-format offerings
   - vendor terms for off-season volume
   - margin tracked per event or order
+  - flat-rate staff scheduled before hourly (W26)
 what_matters:
   - id: W1
     statement: "demand for any of our services: weddings, other events, to-go, catering"
@@ -217,6 +218,7 @@ sub_goals:
     from:
       - W14
       - W24
+      - W23
   - id: SG3
     text: Q1'27 to-go revenue
     share: 10
@@ -226,6 +228,7 @@ sub_goals:
     from:
       - W15
       - W24
+      - W23
 levers:
   - id: L1
     text: Increase marketing-sourced leads and orders in every line
@@ -289,24 +292,20 @@ levers:
       - to: L6
         priority: important
   - id: L5
-    text: Offer Q1 pricing packages within the discount cap
-    metric: bookings on Q1 packages
-    target: "[n]"
+    text: Increase inquiry-to-booking conversion in Q1
+    metric: share of Q1 inquiries that book
+    target: "[C%]"
     by: Mar 31, 2027
     from:
       - W1
-      - W19
+      - W12
     contributes_to:
       - to: SG1
         priority: must
       - to: SG2
-        priority: must
-      - to: SG3
-        priority: must
+        priority: important
       - to: L6
         priority: important
-      - to: L1
-        priority: nice
   - id: L6
     text: Increase sales team output on Q1'27 bookings
     metric: Q1 bookings closed per sales manager
@@ -321,20 +320,6 @@ levers:
         priority: must
       - to: SG3
         priority: must
-  - id: L7
-    text: Grow non-seasonal lines (to-go, catering)
-    metric: share of Q1'27 revenue from non-seasonal lines
-    target: "[P%]"
-    by: Mar 31, 2027
-    from:
-      - W23
-    contributes_to:
-      - to: SG1
-        priority: nice
-      - to: SG2
-        priority: important
-      - to: SG3
-        priority: must
   - id: L8
     text: Test new offerings in the off-season
     metric: offerings tested, each with a go or no-go decision
@@ -347,8 +332,6 @@ levers:
         priority: nice
       - to: SG3
         priority: nice
-      - to: L7
-        priority: important
 guardrails:
   - id: R1
     text: Keep monthly operating cash flow positive and total debt under a ceiling
@@ -366,15 +349,14 @@ guardrails:
     from:
       - W25
   - id: R3
-    text: Keep the current team through Q1'27 and schedule flat-rate staff before hourly
-    metric: headcount; flat-rate hours before hourly
-    bound: no off-season layoffs; flat-rate to [H hrs/wk] first
+    text: Keep the current team through Q1'27
+    metric: headcount
+    bound: no off-season layoffs
     weight: important
     from:
       - W5
       - W9
       - W16
-      - W26
   - id: R4
     text: Hold on-season pricing and cap spend per Q1 initiative until payback
     metric: discount depth; spend per initiative
@@ -400,14 +382,16 @@ options_parked:
     serves: L3
   - text: planner and vendor partnerships
     serves: L4
-  - text: Q1 packages and pricing
-    serves: L5
   - text: sales incentives tied to Q1 bookings
     serves: L6
   - text: pickup and delivery windows
-    serves: L7
+    serves: unassigned
+    note: waits for a to-go lever
   - text: to-go as entry product to catering and events
-    serves: L7
+    serves: unassigned
+    note: waits for a to-go lever
+  - text: Q1 pricing packages within the discount cap
+    serves: L5
 gaps: []
 notes:
   - Weddings are 40 to 60% of events; the rest is diversified, so single-driver risk was dropped
@@ -417,3 +401,6 @@ notes:
     became L4; O7 non-seasonal lines became L7; O4 book Q1 revenue by Dec 31 became the booked_by dates on the
     sub-goals; sheet items L1 to L15 are options, parked by lever; L16 to L20 are in place and support R2
   - "Rating sheets in Drive: VDDM Off-Season Revenue - Value Ratings, - Lever Priorities"
+  - >-
+    Cycle 2, criterion test: L5 was an option (Q1 packages) and became the conversion lever; L7 duplicated SG2 and SG3
+    and was removed, with W23 attached to those sub-goals; R3 kept its bound and lost its scheduling clause
