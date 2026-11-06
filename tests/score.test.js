@@ -29,7 +29,8 @@ test("Step 5 on the off-season fixture: chained lever scores", () => {
     near(net.scores.L1, 0.95 + 0.95 * 0.95);         // own links plus must into L6
   near(net.scores.L5, 0.95 * 0.75 + 0.6 * 0.15 + 0.6 * 0.95);  // conversion lever: SG1 must, SG2 important, L6 important
   assert.equal(net.leverScores[0].id, "L1");
-  assert.equal(net.rank.L8, 7);
+  assert.equal(net.rank.L8, 9);
+  near(net.scores.L10, 0.6 * net.scores.L9 + 0.6 * net.scores.L5 + 0.3 * net.scores.L1);
 });
 
 test("Step 6 Pareto tiers keep ties together", () => {

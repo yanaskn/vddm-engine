@@ -249,14 +249,13 @@ levers:
       - to: L6
         priority: must
   - id: L2
-    text: Increase repeat and referral bookings from past clients and guests
-    metric: share of bookings from repeat or referral; average rating
-    target: "[W%]; [4.x+]"
+    text: Increase repeat bookings from past clients
+    metric: share of Q1 bookings from past clients
+    target: "[W%]"
     by: Mar 31, 2027
     from:
       - W10
       - W17
-      - W18
     contributes_to:
       - to: SG1
         priority: important
@@ -332,6 +331,34 @@ levers:
         priority: nice
       - to: SG3
         priority: nice
+  - id: L9
+    text: Increase bookings from guest and client referrals
+    metric: bookings traced to a guest or client recommendation
+    target: "[n]"
+    by: Mar 31, 2027
+    from:
+      - W10
+      - W17
+    contributes_to:
+      - to: SG1
+        priority: important
+      - to: SG2
+        priority: nice
+  - id: L10
+    text: Raise ratings and review count
+    metric: average rating; reviews per month
+    target: "[4.x+]; [r]"
+    by: Mar 31, 2027
+    from:
+      - W18
+      - W11
+    contributes_to:
+      - to: L9
+        priority: important
+      - to: L5
+        priority: important
+      - to: L1
+        priority: nice
 guardrails:
   - id: R1
     text: Keep monthly operating cash flow positive and total debt under a ceiling
@@ -374,8 +401,6 @@ options_parked:
     serves: L1
   - text: to-go offers to past guests
     serves: L1
-  - text: outreach to past clients and guests
-    serves: L2
   - text: Q1 kickoffs and off-sites
     serves: L3
   - text: corporate lunch programs
@@ -392,6 +417,18 @@ options_parked:
     note: waits for a to-go lever
   - text: Q1 pricing packages within the discount cap
     serves: L5
+  - text: outreach to past clients
+    serves: L2
+  - text: loyalty offer for returning clients
+    serves: L2
+  - text: referral incentive
+    serves: L9
+  - text: post-event follow-up asking for an introduction
+    serves: L9
+  - text: review request after each event
+    serves: L10
+  - text: service recovery on low ratings
+    serves: L10
 gaps: []
 notes:
   - Weddings are 40 to 60% of events; the rest is diversified, so single-driver risk was dropped
@@ -404,3 +441,6 @@ notes:
   - >-
     Cycle 2, criterion test: L5 was an option (Q1 packages) and became the conversion lever; L7 duplicated SG2 and SG3
     and was removed, with W23 attached to those sub-goals; R3 kept its bound and lost its scheduling clause
+  - >-
+    Cycle 2, modularity: L2 split into L2 repeat bookings, L9 guest referrals, L10 ratings and reviews; ratings is an
+    upstream lever feeding L9, L5 and L1
