@@ -10,7 +10,7 @@ Static site, no build step. Deployed on Vercel from `main`.
 - `projects/<name>/` one page per project, each an editable decision map with its own browser-side state; "Start a new project" on the landing page is disabled until the guided session exists
 - `assets/score.js` the scoring core: Step 5 network quantification, Step 6 Pareto tiers, Step 7 option scoring with guardrails and a sensitivity check; pure functions, tested against the dissertation's Table 13 (`npm test`)
 - `assets/map.css`, `assets/map.js` the map module shared by both pages; configured through `window.VDDM_CONFIG` (`fixture`, `readonly`, `storageKey`)
-- `fixtures/*.yaml` state documents in schema v2
+- `fixtures/*.yaml` state documents in schema v2; a lever with `status: proposed` is a guide suggestion, drawn faded and left out of the scores until the DMer keeps it
 - `prompts/` the guide prompts, one file per version; the schema is at the end of the current one
 
 ## Vocabulary

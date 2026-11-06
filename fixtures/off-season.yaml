@@ -359,6 +359,126 @@ levers:
         priority: important
       - to: L1
         priority: nice
+  - by: Mar 31, 2027
+    status: proposed
+    id: L11
+    text: Raise off-season brand reach among planners and corporate buyers
+    metric: reach and recall among planners and corporate buyers
+    target: "[n]"
+    from:
+      - W11
+    contributes_to:
+      - to: L1
+        priority: important
+  - by: Mar 31, 2027
+    status: proposed
+    id: L12
+    text: Build an owned audience for to-go and catering
+    metric: list size; followers who have ordered
+    target: "[n]"
+    from:
+      - W11
+      - W15
+    contributes_to:
+      - to: L1
+        priority: important
+      - to: SG3
+        priority: nice
+  - by: Mar 31, 2027
+    status: proposed
+    id: L13
+    text: Shorten inquiry response time and raise the tour rate
+    metric: hours to first reply; tours per inquiry
+    target: "[h]; [T%]"
+    from:
+      - W12
+    contributes_to:
+      - to: L5
+        priority: must
+  - by: Mar 31, 2027
+    status: proposed
+    id: L14
+    text: Grow the number of actively referring partners
+    metric: partners who referred in the last 90 days
+    target: "[n]"
+    from:
+      - W6
+      - W13
+    contributes_to:
+      - to: L4
+        priority: must
+  - by: Mar 31, 2027
+    status: proposed
+    id: L15
+    text: Build the Q1 pipeline by December
+    metric: open qualified inquiries per salesperson on Dec 31
+    target: "[n]"
+    from:
+      - W24
+    contributes_to:
+      - to: L6
+        priority: must
+  - by: Mar 31, 2027
+    status: proposed
+    id: L16
+    text: Grow corporate accounts in active conversation
+    metric: accounts with a live conversation
+    target: "[n]"
+    from:
+      - W2
+    contributes_to:
+      - to: L3
+        priority: must
+  - by: Mar 31, 2027
+    status: proposed
+    id: L17
+    text: Raise event experience quality
+    metric: post-event survey score
+    target: "[s]"
+    from:
+      - W10
+      - W9
+    contributes_to:
+      - to: L2
+        priority: important
+      - to: L10
+        priority: important
+  - by: Mar 31, 2027
+    status: proposed
+    id: L18
+    text: Increase to-go order frequency and convenience
+    metric: orders per week; repeat order rate
+    target: "[n]; [R%]"
+    from:
+      - W15
+    contributes_to:
+      - to: SG3
+        priority: must
+  - by: Mar 31, 2027
+    status: proposed
+    id: L19
+    text: Cross-sell to-go customers into catering and events
+    metric: to-go customers who book catering or an event
+    target: "[n]"
+    from:
+      - W10
+      - W23
+    contributes_to:
+      - to: SG1
+        priority: nice
+      - to: SG2
+        priority: important
+  - by: Mar 31, 2027
+    status: proposed
+    id: L20
+    text: Increase catering inquiries from outside the venues
+    metric: outside catering inquiries per month
+    target: "[n]"
+    from:
+      - W14
+    contributes_to:
+      - to: SG2
+        priority: must
 guardrails:
   - id: R1
     text: Keep monthly operating cash flow positive and total debt under a ceiling
@@ -410,11 +530,9 @@ options_parked:
   - text: sales incentives tied to Q1 bookings
     serves: L6
   - text: pickup and delivery windows
-    serves: unassigned
-    note: waits for a to-go lever
+    serves: L18
   - text: to-go as entry product to catering and events
-    serves: unassigned
-    note: waits for a to-go lever
+    serves: L19
   - text: Q1 pricing packages within the discount cap
     serves: L5
   - text: outreach to past clients
@@ -444,3 +562,6 @@ notes:
   - >-
     Cycle 2, modularity: L2 split into L2 repeat bookings, L9 guest referrals, L10 ratings and reviews; ratings is an
     upstream lever feeding L9, L5 and L1
+  - >-
+    Cycle 2, suggestion: ten candidate levers proposed by the guide from upstream questions and sub-goal gaps, marked
+    status proposed until the DMer keeps or removes them

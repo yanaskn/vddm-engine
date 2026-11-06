@@ -30,6 +30,7 @@
     n = S.guardrails.find(x => x.id === id); if (n) return { kind: "rail", n };
     return null;
   }
+  function isProposed(l) { return l && l.status === "proposed"; }
   function nextId(prefix, list) { let i = 1; while (list.some(x => x.id === prefix + i)) i++; return prefix + i; }
   function wrapText(t, max, maxLines) {
     const words = String(t || "").trim().split(/\s+/).filter(Boolean); const out = []; let cur = "";
@@ -128,7 +129,8 @@
         const mx = (x1 + x2) / 2; d = `M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
       }
       const on = focusId && (focusId === l.id || focusId === c.to);
-      const p = el("path", { d, class: `link ${c.priority}${on ? " on" : ""}`, "data-from": l.id, "data-to": c.to }, linksG);
+      const prop = isProposed(l) || isProposed(S.levers.find(x => x.id === c.to));
+      const p = el("path", { d, class: `link ${c.priority}${on ? " on" : ""}${prop ? " proposed" : ""}`, "data-from": l.id, "data-to": c.to }, linksG);
       const h = el("path", { d, class: "hit" }, linksG);
       if (!RO) h.addEventListener("click", (ev) => { ev.stopPropagation(); openLinkPop(l.id, c.to, ev); });
     }));
@@ -165,7 +167,10 @@
     const detail = view === "detail";
     const net = (typeof VDDMScore !== "undefined") ? VDDMScore.scoreNetwork(S) : null;
     const top = net ? new Set(VDDMScore.paretoTiers(net.leverScores, 0.2)[0] || []) : new Set();
-    S.levers.forEach(l => draw("lever", l, l.text, net ? `${l.id}, score ${net.scores[l.id].toFixed(2)}, rank ${net.rank[l.id]}${detail && l.metric ? ", " + l.metric : ""}` : (detail ? `${l.id}${l.metric ? ", " + l.metric : ""}` : l.id), top.has(l.id) ? " top" : ""));
+    S.levers.forEach(l => {
+      if (isProposed(l)) { draw("lever", l, l.text, `${l.id}, proposed${detail && l.metric ? ", " + l.metric : ""}`, " proposed"); return; }
+      draw("lever", l, l.text, net ? `${l.id}, score ${net.scores[l.id].toFixed(2)}, rank ${net.rank[l.id]}${detail && l.metric ? ", " + l.metric : ""}` : (detail ? `${l.id}${l.metric ? ", " + l.metric : ""}` : l.id), top.has(l.id) ? " top" : "");
+    });
     S.sub_goals.forEach(s => {
       const gap = incoming(s.id).length === 0;
       draw("sg", s, s.text, gap ? `${s.id}, no lever` : (detail ? `${s.id}${s.booked_by ? ", booked " + s.booked_by : ""}${s.realized_by ? ", realized " + s.realized_by : ""}` : s.id), gap ? " gap" : "");
@@ -188,7 +193,14 @@
   }
   function renderStatus() {
     if (sel) { const n = nodeById(sel); status.textContent = `Linking ${sel}: click a sub-goal, the goal, or another lever it contributes to. Esc to cancel.`; status.classList.add("active"); }
-    else { const gaps = S.sub_goals.filter(s => incoming(s.id).length === 0).map(s => s.id); status.textContent = gaps.length ? `Gap check: ${gaps.join(", ")} has no lever pointing at it.` : ""; status.classList.remove("active"); }
+    else {
+      const gaps = S.sub_goals.filter(s => incoming(s.id).length === 0).map(s => s.id);
+      const np = S.levers.filter(isProposed).length;
+      const parts = [];
+      if (gaps.length) parts.push(`Gap check: ${gaps.join(", ")} has no lever pointing at it.`);
+      if (np) parts.push(`${np} proposed lever${np > 1 ? "s" : ""} to keep or remove; they do not count until kept.`);
+      status.textContent = parts.join(" "); status.classList.remove("active");
+    }
   }
 
   // ----- interactions
@@ -230,7 +242,8 @@
     if (kind === "goal") body += field("Metric", n.metric, 'data-k="metric"') + field("Target", n.target, 'data-k="target"') + field("Realized by", n.realized_by, 'data-k="realized_by"');
     if (kind === "rail") body += field("Metric", n.metric, 'data-k="metric"') + field("Floor or cap", n.bound, 'data-k="bound"') +
       `<label>Weight</label><div class="pri">${PRI.map(p => `<button class="btn" data-w="${p}" aria-pressed="${n.weight === p}">${PRI_LABEL[p]}</button>`).join("")}</div>`;
-    body += `<div class="row">${kind === "lever" ? '<button class="btn primary" data-act="link">Link from here</button>' : ""}<span class="spacer"></span>${kind !== "goal" ? '<button class="btn danger" data-act="del">Delete</button>' : ""}<button class="btn" data-act="done">Done</button></div>`;
+    if (kind === "lever" && isProposed(n)) body = body.replace(`<h3>${name} ${esc(n.id)}</h3>`, `<h3>Proposed lever ${esc(n.id)}</h3><div class="hint" style="color:var(--muted);font-size:13px;margin-bottom:6px">Suggested by the guide. Keep it to count it in the scores, or remove it.</div>`);
+    body += `<div class="row">${kind === "lever" && isProposed(n) ? '<button class="btn primary" data-act="keep">Keep</button>' : (kind === "lever" ? '<button class="btn primary" data-act="link">Link from here</button>' : "")}<span class="spacer"></span>${kind !== "goal" ? `<button class="btn danger" data-act="del">${kind === "lever" && isProposed(n) ? "Remove" : "Delete"}</button>` : ""}<button class="btn" data-act="done">Done</button></div>`;
     pop.innerHTML = body;
     pop.querySelectorAll("[data-k]").forEach(inp => inp.addEventListener("change", () => { n[inp.dataset.k] = inp.type === "number" ? Number(inp.value) : (inp.value || undefined); if (inp.dataset.k === "parent" && !inp.value) delete n.parent; save(); render(); }));
     pop.querySelectorAll("[data-w]").forEach(b => b.addEventListener("click", () => { n.weight = b.dataset.w; pop.querySelectorAll("[data-w]").forEach(x => x.setAttribute("aria-pressed", x === b)); save(); render(); }));
@@ -240,10 +253,12 @@
       if (del.dataset.armed !== "1") { del.dataset.armed = "1"; del.textContent = "Confirm delete"; return; }
       if (kind === "sg") S.sub_goals = S.sub_goals.filter(x => x !== n);
       if (kind === "rail") S.guardrails = S.guardrails.filter(x => x !== n);
-      if (kind === "lever") { S.levers = S.levers.filter(x => x !== n); S.levers.forEach(l => { if (l.parent === n.id) delete l.parent; }); S.options_parked = S.options_parked.filter(o => o.serves !== n.id); }
+      if (kind === "lever") { S.levers = S.levers.filter(x => x !== n); S.levers.forEach(l => { if (l.parent === n.id) delete l.parent; }); S.options_parked.forEach(o => { if (o.serves === n.id) o.serves = "unassigned"; }); }
       S.levers.forEach(l => { l.contributes_to = (l.contributes_to || []).filter(c => c.to !== n.id); });
       closePop(); commit();
     });
+    const kp = pop.querySelector('[data-act="keep"]');
+    if (kp) kp.addEventListener("click", () => { delete n.status; closePop(); commit(); });
     const lk = pop.querySelector('[data-act="link"]');
     if (lk) lk.addEventListener("click", () => { sel = n.id; closePop(); render(); });
     placePop(ev);

@@ -40,8 +40,12 @@
       return scores[s.id];
     };
     subGoals.forEach(s => resolveSG(s));
-    // levers: iterate (Bellman-Ford style) until stable; handles lever-to-lever chains and tolerates cycles
-    const levers = state.levers || [];
+    // levers: proposed levers (status: proposed) are not counted until the decision-maker keeps them
+    const allLevers = state.levers || [];
+    const kept = new Set(allLevers.filter(l => l.status !== "proposed").map(l => l.id));
+    const isLever = (id) => allLevers.some(l => l.id === id);
+    const levers = allLevers.filter(l => kept.has(l.id)).map(l => Object.assign({}, l, { contributes_to: (l.contributes_to || []).filter(c => !isLever(c.to) || kept.has(c.to)) }));
+    // iterate (Bellman-Ford style) until stable; handles lever-to-lever chains and tolerates cycles
     levers.forEach(l => { scores[l.id] = 0; });
     let iterations = 0, converged = false;
     while (iterations < o.maxIterations && !converged) {

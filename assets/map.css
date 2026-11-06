@@ -60,6 +60,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .node.gap rect { stroke: var(--warn); stroke-dasharray: 5 3; }
 .node.gap .s { fill: var(--warn); }
 .node.top rect { stroke-width: 2.4; }
+.node.proposed rect { stroke-dasharray: 5 4; fill-opacity: 0.45; stroke-opacity: 0.6; }
+.node.proposed .t, .node.proposed .s { opacity: 0.6; }
+.link.proposed { opacity: 0.3; }
 .node.selected rect { stroke-width: 2.5; }
 .node.target rect { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 4 3; }
 .link { fill: none; stroke: var(--fg); stroke-linecap: round; }
