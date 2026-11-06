@@ -28,4 +28,4 @@ Static site, no build step. Deployed on Vercel from `main`.
 
 ## Status
 
-Cycle 1 done: prompt v1 on a live decision, 15 findings, schema v2. Cycle 2 in progress: prompt v2 and the map prototype. Next: scoring core, guided session, options phase.
+Cycle 1 done: prompt v1 on a live decision, 15 findings, schema v2. Cycle 2: map prototype, scoring core, criterion test for levers versus options, modularity rule, proposed levers; prompt v3 carries these. Next: options phase, guided session.
