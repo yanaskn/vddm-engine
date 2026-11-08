@@ -122,3 +122,9 @@ body.ro .node rect, body.ro .hit { cursor: default; }
 .banner { background: var(--goal-bg); color: var(--goal-ink); border: 1px solid var(--goal); border-radius: 10px; padding: 10px 14px; font-size: 14px; margin-bottom: 14px; }
 .banner a { color: inherit; }
 
+.tip { position: absolute; z-index: 4; pointer-events: none; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; width: 300px; max-width: calc(100% - 16px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); font-size: 13px; line-height: 1.45; }
+.tipkind { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 2px; }
+.tipname { font-weight: 500; font-size: 14px; margin-bottom: 6px; }
+.tiprow { display: grid; grid-template-columns: 96px 1fr; gap: 8px; padding: 2px 0; border-top: 1px solid var(--line); }
+.tiprow span { color: var(--muted); }
+.pop textarea { resize: vertical; line-height: 1.4; }

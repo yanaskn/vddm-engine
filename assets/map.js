@@ -160,8 +160,8 @@
       lines.forEach((ln, i) => text(p.x + p.w / 2, top + i * 15, "t", ln, g));
       if (two) text(p.x + p.w / 2, p.y + p.h - 12, "s", short(subtitle, Math.floor((p.w - 12) / 5.7)), g);
       g.addEventListener("click", (ev) => { ev.stopPropagation(); onNodeClick(kind, n, ev); });
-      g.addEventListener("mouseenter", () => { focusId = n.id; svg.classList.add("focus"); refocus(); });
-      g.addEventListener("mouseleave", () => { focusId = null; svg.classList.remove("focus"); refocus(); });
+      g.addEventListener("mouseenter", (ev) => { focusId = n.id; svg.classList.add("focus"); refocus(); showTip(kind, n, p); });
+      g.addEventListener("mouseleave", () => { focusId = null; svg.classList.remove("focus"); refocus(); hideTip(); });
       if (sel && sel !== n.id && (kind === "sg" || kind === "goal" || kind === "lever")) g.classList.add("target");
     };
     const detail = view === "detail";
@@ -221,6 +221,35 @@
   // ----- popovers
   let pop = null;
   function closePop() { if (pop) { pop.remove(); pop = null; } }
+
+  // ----- hover card: the full text of a node without clicking
+  let tip = null;
+  function hideTip() { if (tip) { tip.remove(); tip = null; } }
+  function showTip(kind, n, p) {
+    if (pop) return;
+    hideTip();
+    tip = document.createElement("div"); tip.className = "tip";
+    const name = { goal: "Goal", sg: "Sub-goal", lever: isProposed(n) ? "Proposed lever" : "Lever", rail: "Guardrail" }[kind];
+    const rows = [];
+    if (n.metric) rows.push(["Metric", n.metric]);
+    if (n.target) rows.push(["Target", n.target]);
+    if (kind === "sg") { rows.push(["Share of goal", `${n.share}%`]); if (n.booked_by) rows.push(["Booked by", n.booked_by]); if (n.realized_by) rows.push(["Realized by", n.realized_by]); }
+    if (kind === "lever") { if (n.by) rows.push(["By", n.by]); const links = (n.contributes_to || []).map(c => `${c.to} ${PRI_LABEL[c.priority] ? PRI_LABEL[c.priority].toLowerCase() : c.priority}`); if (links.length) rows.push(["Contributes to", links.join(", ")]); const fed = incoming(n.id).map(i => i.from); if (fed.length) rows.push(["Fed by", fed.join(", ")]); }
+    if (kind === "goal") { if (n.realized_by) rows.push(["Realized by", n.realized_by]); }
+    if (kind === "rail") { if (n.bound) rows.push(["Bound", n.bound]); rows.push(["Weight", PRI_LABEL[n.weight] || n.weight]); }
+    const opts = kind === "lever" ? S.options_parked.filter(o => o.serves === n.id).map(o => o.text) : [];
+    if (opts.length) rows.push(["Parked options", opts.join("; ")]);
+    tip.innerHTML = `<div class="tipkind">${name} ${esc(n.id)}</div><div class="tipname">${esc(n.text || "")}</div>` + rows.map(r => `<div class="tiprow"><span>${r[0]}</span>${esc(r[1])}</div>`).join("");
+    wrap.appendChild(tip);
+    const svgRect = svg.getBoundingClientRect(), wrapRect = wrap.getBoundingClientRect();
+    const scale = svgRect.width / Number(svg.getAttribute("width"));
+    let x = (p.x + p.w) * scale + (svgRect.left - wrapRect.left) + wrap.scrollLeft + 10;
+    let y = p.y * scale + (svgRect.top - wrapRect.top);
+    if (x + tip.offsetWidth > wrap.scrollLeft + wrap.clientWidth - 8) x = p.x * scale + (svgRect.left - wrapRect.left) + wrap.scrollLeft - tip.offsetWidth - 10;
+    if (x < 8) x = 8;
+    if (y + tip.offsetHeight > wrap.clientHeight - 8) y = Math.max(8, wrap.clientHeight - tip.offsetHeight - 8);
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
   function placePop(ev) {
     const r = wrap.getBoundingClientRect();
     let x = ev.clientX - r.left + wrap.scrollLeft + 12, y = ev.clientY - r.top + 12;
@@ -230,12 +259,13 @@
     const over = pop.offsetTop + pop.offsetHeight - wrap.clientHeight; if (over > 0) pop.style.top = Math.max(8, y - over - 8) + "px";
   }
   function field(label, value, attrs) { return `<label>${label}<input ${attrs || ""} value="${esc(value == null ? "" : value)}"></label>`; }
+  function area(label, value, attrs) { return `<label>${label}<textarea rows="3" ${attrs || ""}>${esc(value == null ? "" : value)}</textarea></label>`; }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
 
   function openNodePop(kind, n, ev) {
-    closePop(); pop = document.createElement("div"); pop.className = "pop"; pop.addEventListener("click", e => e.stopPropagation());
+    hideTip(); closePop(); pop = document.createElement("div"); pop.className = "pop"; pop.addEventListener("click", e => e.stopPropagation());
     const name = { goal: "Goal", sg: "Sub-goal", lever: "Lever", rail: "Guardrail" }[kind];
-    let body = `<h3>${name} ${esc(n.id)}</h3>` + field("Text", n.text, 'data-k="text"');
+    let body = `<h3>${name} ${esc(n.id)}</h3>` + area("Text", n.text, 'data-k="text"');
     if (kind === "sg") body += field("Share of goal, %", n.share, 'data-k="share" type="number" min="0" max="100"') + field("Metric", n.metric, 'data-k="metric"') + field("Booked by", n.booked_by, 'data-k="booked_by"') + field("Realized by", n.realized_by, 'data-k="realized_by"');
     if (kind === "lever") body += field("Metric", n.metric, 'data-k="metric"') + field("Target", n.target, 'data-k="target"') + field("By", n.by, 'data-k="by"') +
       `<label>Parent lever<select data-k="parent"><option value="">none</option>${S.levers.filter(l => l.id !== n.id).map(l => `<option value="${l.id}"${l.parent === undefined && n.parent === l.id ? " selected" : (n.parent === l.id ? " selected" : "")}>${l.id} ${esc(short(l.text, 30))}</option>`).join("")}</select></label>`;
@@ -262,11 +292,11 @@
     const lk = pop.querySelector('[data-act="link"]');
     if (lk) lk.addEventListener("click", () => { sel = n.id; closePop(); render(); });
     placePop(ev);
-    const first = pop.querySelector("input"); if (first) first.focus();
+    const first = pop.querySelector("textarea, input"); if (first) first.focus();
   }
 
   function openLinkPop(from, to, ev) {
-    closePop(); pop = document.createElement("div"); pop.className = "pop"; pop.addEventListener("click", e => e.stopPropagation());
+    hideTip(); closePop(); pop = document.createElement("div"); pop.className = "pop"; pop.addEventListener("click", e => e.stopPropagation());
     const l = S.levers.find(x => x.id === from); const c = (l.contributes_to || []).find(x => x.to === to); if (!c) return;
     const t = nodeById(to);
     pop.innerHTML = `<h3>Link</h3><div>${esc(short(l.text, 44))}</div><div class="hint" style="color:var(--muted);font-size:13px">contributes to ${esc(short(t ? t.n.text : to, 44))}</div>
@@ -279,7 +309,7 @@
   }
 
   function openSharePop(s, ev) {
-    closePop(); pop = document.createElement("div"); pop.className = "pop"; pop.addEventListener("click", e => e.stopPropagation());
+    hideTip(); closePop(); pop = document.createElement("div"); pop.className = "pop"; pop.addEventListener("click", e => e.stopPropagation());
     const sum = S.sub_goals.reduce((a, x) => a + (Number(x.share) || 0), 0);
     pop.innerHTML = `<h3>Share of the goal</h3><div>${esc(short(s.text, 44))}</div>
       <label>How much of the goal ${esc(s.id)} represents, %<input type="number" min="0" max="100" value="${Number(s.share) || 0}" data-share></label>
