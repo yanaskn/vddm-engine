@@ -11,7 +11,7 @@
 
 <header>
   <h1>Off-season revenue <small id="dtitle"></small></h1>
-  <span class="sub">Click a node to edit it, click a line to rate it, select a lever and then a target to link them. <a href="../../">All projects</a></span>
+  <span class="sub">Hover a node to preview it in the side pane. Click a node or a line to edit it there. <a href="../../">All projects</a></span>
 </header>
 
 <div class="toolbar">
@@ -23,12 +23,16 @@
   <button class="btn" id="addSG">+ Sub-goal</button>
   <button class="btn" id="addRail">+ Guardrail</button>
   <span style="flex:1"></span>
+  <button class="btn" id="paneToggle">Hide details</button>
   <button class="btn" id="reset">Reset to original</button>
 </div>
 <div class="status" id="status"></div>
 
-<div class="mapwrap" id="mapwrap">
-  <svg id="map" viewBox="0 0 900 600" role="img" aria-label="Objective network for the decision"></svg>
+<div class="workspace" id="workspace">
+  <div class="mapwrap" id="mapwrap">
+    <svg id="map" viewBox="0 0 900 600" role="img" aria-label="Objective network for the decision"></svg>
+  </div>
+  <aside class="pane" id="pane" aria-live="polite"></aside>
 </div>
 <div class="legend">
   <span><i></i>must</span>
