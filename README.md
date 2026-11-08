@@ -12,6 +12,7 @@ Static site, no build step. Deployed on Vercel from `main`.
 - `assets/map.css`, `assets/map.js` the map module shared by both pages; configured through `window.VDDM_CONFIG` (`fixture`, `readonly`, `storageKey`)
 - `fixtures/*.yaml` state documents in schema v2; a lever with `status: proposed` is a guide suggestion, drawn faded and left out of the scores until the DMer keeps it
 - `prompts/` the guide prompts, one file per version; the schema is at the end of the current one
+- `docs/design-log.md` one line per finding or decision, tagged theory, utility or usability; written in the same commit as the change and mirrored into the paper's Appendix F
 
 ## Vocabulary
 

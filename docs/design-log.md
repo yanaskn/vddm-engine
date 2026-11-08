@@ -1,0 +1,25 @@
+# Design log
+
+One line per finding or decision, tagged with the design dimension it sits on (theory, utility, usability), following the three-dimensional design approach from the VDDM dissertation. Written in the same commit as the change it records. Mirrored into the paper as Appendix F; cycle 1 findings are in the paper's Appendix D.
+
+Columns: date, cycle, dimension, finding, change, where it landed (prompt, map, score, schema, fixture, paper).
+
+| Date | Cycle | Dimension | Finding | Change | Landed in |
+| :- | :- | :- | :- | :- | :- |
+| 2026-11-05 | 2 | Usability | Node type rendered near 15px because the SVG scaled to the container; names did not fit | Map renders 1:1 at container width, titles 13px wrapped to two lines, subtitles 11px | map |
+| 2026-11-05 | 2 | Usability | Status line and banner restated the map; noise | Status speaks only on a gap or a pending proposal | map |
+| 2026-11-05 | 2 | Utility | Static cases cannot be edited; the engine needs projects the DMer owns | Site structure: Start a new project (disabled until the guide exists) and Projects, one editable map per project, state kept in the browser | map, repo |
+| 2026-11-05 | 2 | Theory | L8 testing ground was folded into another lever and W22 sat under L7; lineage from values to levers was lost | L8 its own lever, W22 moved, lineage recorded in fixture notes | fixture |
+| 2026-11-05 | 2 | Theory | Levers depend on levers; VDDM allows MO-to-MO links and the fixture had none | Lever-to-lever links rated in the fixture | fixture |
+| 2026-11-05 | 2 | Theory | Step 5 and Step 7 are one formula: an option's score is the Step 5 sum applied to the leaves it serves | Scoring core: Step 5 quantification (goal 1, sub-goal share, lever sum of weight by target), Pareto tiers, Step 7 option scoring, sensitivity; Table 13 of the dissertation reproduced as a test | score |
+| 2026-11-05 | 2 | Utility | Chained lever scores change the ranking; L1 moves to the top once its link into L6 counts | Scores and ranks on nodes; top Pareto tier marked | map, score |
+| 2026-11-05 | 2 | Usability | Links drawn in one column cannot show which lever feeds which | Levers laid out in columns by dependency depth, links flow left to right | map |
+| 2026-11-06 | 2 | Theory | Lever vs option: the dissertation treats means objectives as the criteria options are judged by, and alternatives as the candidates judged; the criterion question sorts them ("is this how you would judge the things you might do, or one of them?"); the same test sorts guardrails into bounds and policies | Criterion test stated; L5 pricing packages reclassified as an option and the lever becomes conversion; L7 removed as a duplicate of sub-goals; R3 kept as a bound only | fixture, prompt v3, paper |
+| 2026-11-06 | 2 | Utility | Sub-goals and levers compete for attention but form a portfolio; options likewise; ties at Step 5 are not defects, differentiation comes at Step 7 | Portfolio reading adopted; planned "what it adds" column for options | paper, score (planned) |
+| 2026-11-06 | 2 | Theory | Modularity: split a lever when its metric needs "and", its options sort into non-overlapping groups, or its parts link differently; merge when metric, options and links coincide; a lever restating a sub-goal merges into it | L2 split into repeat bookings, guest referrals, ratings and reviews; rules into prompt v3 | fixture, prompt v3 |
+| 2026-11-06 | 2 | Utility | The lever set was thin after reclassification; too few levers for the Pareto rule to mean anything | Four suggestion sources (gaps, upstream question per lever, pattern set per sub-goal type, splitting); ten proposed levers added to the fixture | fixture, prompt v3 |
+| 2026-11-06 | 2 | Usability | The DMer decides on suggestions in the map, not in the chat | Proposed levers drawn faded and dashed with Keep or Remove; excluded from scores until kept | map, score, schema (status: proposed) |
+| 2026-11-06 | 2 | Theory | Lever-to-lever links were an exception in v2; they are expected | Prompt v3: dependencies asked for per lever; thinness rule; quoted YAML strings | prompt v3 |
+| 2026-11-08 | 2 | Usability | Full lever names were unreadable in nodes | Hover card with full text, metric, target, dates, links and parked options | map |
+| 2026-11-08 | 2 | Usability | The hover card hid the lines it described; the Parent lever field confused (always empty); connections could not be edited in place | Editable side pane: hover previews, click pins and edits, Esc unpins; Connections section with priority and remove, add picker, Fed by with jump; a line click pins its row; Parent lever removed from the editor, kept in schema | map |
+| 2026-11-08 | 2 | Method | Each thread runs theory, then utility, then usability as a loop; usability-only loops exist (reading the map) | Design log started; Appendix F in the paper | repo, paper |
